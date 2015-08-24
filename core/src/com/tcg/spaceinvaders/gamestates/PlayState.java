@@ -2,18 +2,24 @@ package com.tcg.spaceinvaders.gamestates;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.tcg.spaceinvaders.MyCamera;
+import com.tcg.spaceinvaders.entities.*;
 import com.tcg.spaceinvaders.managers.GameStateManager;
 
 public class PlayState extends GameState {
 
+	private MyCamera cam;
+	
+	private Player p;
+	
 	public PlayState(GameStateManager gsm) {
 		super(gsm);
 	}
 
 	@Override
 	protected void init() {
-		// TODO Auto-generated method stub
-
+		cam = new MyCamera(true);
+		p = new Player();
 	}
 
 	@Override
@@ -30,13 +36,16 @@ public class PlayState extends GameState {
 
 	@Override
 	public void draw(float dt, SpriteBatch sb, ShapeRenderer sr) {
-		// TODO Auto-generated method stub
+		sb.begin();
+		sb.setProjectionMatrix(cam.combined);
+		p.draw(sr, sb, dt);
+		sb.end();
 
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
+		cam.resize(width, height, true);
 
 	}
 

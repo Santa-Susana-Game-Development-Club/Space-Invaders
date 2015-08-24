@@ -21,6 +21,7 @@ public class MyConstants {
 	
 	public static final int WOLRD_WIDTH = 350;
 	public static final int WORLD_HEIGHT = 350;
+	public static final int GAME_WIDTH = 250;
 	
 	//XBox Mappings
 	public static final int A = 0;
