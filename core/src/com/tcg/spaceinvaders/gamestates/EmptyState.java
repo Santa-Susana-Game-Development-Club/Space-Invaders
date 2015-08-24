@@ -17,6 +17,12 @@ public class EmptyState extends GameState {
 	}
 
 	@Override
+	public void handleInput() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
 	public void update(float dt) {
 		// TODO Auto-generated method stub
 

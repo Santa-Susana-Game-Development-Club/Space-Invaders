@@ -14,6 +14,7 @@ public abstract class GameState {
 	}
 	
 	protected abstract void init();
+	public abstract void handleInput();
 	public abstract void update(float dt);
 	public abstract void draw(float dt, SpriteBatch sb, ShapeRenderer sr);
 	public abstract void resize(int width, int height);
