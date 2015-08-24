@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 public class MyConstants {
 
 	public static enum States {
-		SPLASH, TITLE, LEVELSELECT, CREDITS, PLAY
+		SPLASH, TITLE, PLAY
 	}
 	
 	public static String saveFile = "space_invaders.sav";
