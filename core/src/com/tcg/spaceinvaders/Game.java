@@ -9,9 +9,15 @@ import com.tcg.spaceinvaders.managers.*;
 
 public class Game extends ApplicationAdapter {
 	
+	private static final String TITLE = "Space Invaders";
+
 	public static Vector2 SIZE, CENTER;
 	
 	private GameStateManager gsm;
+	
+	private int fps, frames;
+	
+	private float fpstime;
  	
 	@Override
 	public void create () {
@@ -22,6 +28,10 @@ public class Game extends ApplicationAdapter {
 		Game.CENTER = new Vector2();
 		Game.SIZE.set(width, height);
 		Game.CENTER.set(width * .5f, height * .5f);
+		
+		fpstime = 0;
+		fps = 0;
+		frames = 0;
 		
 		gsm = new GameStateManager(States.PLAY); //TODO Change PLAY to SPLASH when SplashState is created
 	}
@@ -36,6 +46,15 @@ public class Game extends ApplicationAdapter {
 		gsm.handleInput();
 		gsm.update(dt);
 		gsm.draw(dt);
+		
+		fpstime += dt;
+		frames++;
+		if(fpstime >= 1) {
+			fps = frames;
+			frames = 0;
+			fpstime = 0;
+		}
+		Gdx.graphics.setTitle(Game.TITLE + " | " + fps + " fps");
 		
 	}
 
