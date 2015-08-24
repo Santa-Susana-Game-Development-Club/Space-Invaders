@@ -3,8 +3,8 @@ package com.tcg.spaceinvaders.entities;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.tcg.spaceinvaders.Game;
 import com.tcg.spaceinvaders.MyConstants;
+import com.tcg.spaceinvaders.managers.MyInput;
 
 public class Player extends Entity {
 
@@ -18,10 +18,20 @@ public class Player extends Entity {
 	}
 	
 	public void handleInput() {
-		
+		if(MyInput.keyDown(MyInput.LEFT)) {
+			vel.x = -2.5f;
+		} else if(MyInput.keyDown(MyInput.RIGHT)) {
+			vel.x = 2.5f;
+		} else {
+			vel.x = 0;
+		}
 	}
 	
 	public void update() {
+		setDimensions(tex.getWidth(), tex.getHeight());
+		
+		bounds.x += vel.x;
+		bounds.x = MyConstants.clamp(bounds.x, 0, MyConstants.GAME_WIDTH - getWidth());
 		
 	}
 
