@@ -19,8 +19,8 @@ public class MyConstants {
 
 	public static int NUM_TOUCHES = 20;
 	
-	public static final int WOLRD_WIDTH = 800;
-	public static final int WORLD_HEIGHT = 450;
+	public static final int WOLRD_WIDTH = 350;
+	public static final int WORLD_HEIGHT = 350;
 	
 	//XBox Mappings
 	public static final int A = 0;
