@@ -2,6 +2,7 @@ package com.tcg.spaceinvaders;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
 import com.tcg.spaceinvaders.MyConstants.States;
@@ -34,6 +35,9 @@ public class Game extends ApplicationAdapter {
 		frames = 0;
 		
 		gsm = new GameStateManager(States.PLAY); //TODO Change PLAY to SPLASH when SplashState is created
+		
+		Gdx.input.setInputProcessor(new MyInputProcessor());
+		Controllers.addListener(new MyControllerProcessor());
 	}
 
 	@Override
@@ -55,7 +59,8 @@ public class Game extends ApplicationAdapter {
 			fpstime = 0;
 		}
 		Gdx.graphics.setTitle(Game.TITLE + " | " + fps + " fps");
-		
+	
+		MyInput.update();
 	}
 
 	@Override
