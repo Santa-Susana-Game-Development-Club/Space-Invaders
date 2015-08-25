@@ -28,6 +28,8 @@ public class Game extends ApplicationAdapter {
 	private static Save save;
 	
 	public static int SCORE, HIGHSCORE;
+	
+	public static final States defaultState = States.GAMEOVER;
  	
 	@Override
 	public void create () {
@@ -62,7 +64,7 @@ public class Game extends ApplicationAdapter {
 		
 		Game.HIGHSCORE = Game.save.getHighscore();
 		
-		gsm = new GameStateManager(States.PLAY); //TODO Change PLAY to SPLASH when SplashState is created
+		gsm = new GameStateManager(Game.defaultState);
 		
 		Gdx.input.setInputProcessor(new MyInputProcessor());
 		Controllers.addListener(new MyControllerProcessor());

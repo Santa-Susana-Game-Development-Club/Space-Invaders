@@ -28,6 +28,9 @@ public class GameStateManager {
 		if(state == States.PLAY) {
 			gameState = new PlayState(this);
 		}
+		if(state == States.GAMEOVER) {
+			gameState = new GameOverState(this);
+		}
 	}
 	
 	public void handleInput() {
