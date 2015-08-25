@@ -14,7 +14,7 @@ public class Player extends Entity {
 		super();
 		tex = new Texture("entities/player.png");
 		setDimensions(tex.getWidth(), tex.getHeight());
-		setPosition((MyConstants.WOLRD_WIDTH * .5f) - (getWidth() * .5f), MyConstants.WORLD_HEIGHT * .10f - (getHeight() * .5f));
+		setPosition((MyConstants.GAME_WIDTH * .5f) - (getWidth() * .5f), MyConstants.WORLD_HEIGHT * .10f - (getHeight() * .5f));
 	}
 	
 	public void handleInput() {
