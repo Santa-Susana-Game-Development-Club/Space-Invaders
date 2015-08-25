@@ -26,12 +26,16 @@ public class PlayState extends GameState {
 	private Array<Shield> shields;
 	
 	private Array<Enemy> enemies;
-	
+
 	private Array<Bullet> bullets;
+	
+	private Array<MotherShip> motherShip;
 	
 	private float moveTime, moveTimer;
 	
 	private boolean enemyUp;
+	
+	private float motherShipTime, motherShipTimer;
 	
 	public PlayState(GameStateManager gsm) {
 		super(gsm);
@@ -81,10 +85,22 @@ public class PlayState extends GameState {
 	@Override
 	public void update(float dt) {
 		p.update();
+		motherShipTime += dt;
+		if(motherShipTime > motherShipTimer) {
+			motherShipTime = 0;
+			motherShip.add(new MotherShip());
+		}
+		for(MotherShip ship : motherShip) {
+			ship.update();
+			if(ship.getX() < 0 || ship.getX() > MyConstants.GAME_WIDTH) {
+				motherShip.removeValue(ship, true);
+			}
+		}
 		for(Bullet b : bullets) {
 			b.update();
 			if(b.getY() <= 0 || b.getTop() >= MyConstants.WORLD_HEIGHT) {
 				bullets.removeValue(b, true);
+				continue;
 			}
 		}
 		for(Shield s : shields) {
@@ -185,6 +201,7 @@ public class PlayState extends GameState {
 	
 	private void reset() {
 		enemies.clear();
+		motherShip.clear();
 		for(int row = 0; row < 5; row++) {
 			for(int col = 0; col < 13; col++) {
 				enemies.add(new Enemy(row, col));
@@ -196,6 +213,9 @@ public class PlayState extends GameState {
 		moveTime = 0;
 		
 		enemyUp = false;
+		
+		motherShipTime = 0;
+		motherShipTimer = 7.5f;
 	}
 
 }
