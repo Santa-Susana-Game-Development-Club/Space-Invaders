@@ -32,7 +32,7 @@ public class Enemy extends Entity {
 			texUp = new Texture(path + "top1.png");
 			pointWorth = 30;
 		}
-		bounds.set((MyConstants.GAME_WIDTH * .075f) + (col * (width * 1.5f)) + ((width - texDown.getWidth()) * .5f), (MyConstants.WORLD_HEIGHT * .6f) + (row * (height * 2.5f)), texDown.getWidth(), texDown.getHeight());
+		bounds.set((MyConstants.GAME_WIDTH * .075f) + (col * (width * 1.5f)) + ((width - texDown.getWidth()) * .5f), (MyConstants.WORLD_HEIGHT * .5f) + (row * (height * 2.5f)), texDown.getWidth(), texDown.getHeight());
 		vel.set(2.5f, 0);
 	}
 
@@ -55,7 +55,7 @@ public class Enemy extends Entity {
 	public void bounceVelocity() {
 		vel.x *= -1;
 		bounds.x += vel.x;
-		bounds.y -= 2;
+		bounds.y -= 5;
 	}
 
 	@Override

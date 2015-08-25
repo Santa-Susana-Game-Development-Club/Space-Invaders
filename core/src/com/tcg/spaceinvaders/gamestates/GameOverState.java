@@ -5,10 +5,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.tcg.spaceinvaders.Game;
-import com.tcg.spaceinvaders.MyCamera;
-import com.tcg.spaceinvaders.MyConstants;
-import com.tcg.spaceinvaders.MyConstants.States;
+import com.tcg.spaceinvaders.*;
 import com.tcg.spaceinvaders.managers.GameStateManager;
 import com.tcg.spaceinvaders.managers.MyInput;
 
@@ -67,7 +64,7 @@ public class GameOverState extends GameState {
 	@Override
 	public void handleInput() {
 		if(MyInput.keyPressed(MyInput.START)) {
-			gsm.setState(States.PLAY);
+			gsm.setState(Game.defaultState);
 		}
 
 	}

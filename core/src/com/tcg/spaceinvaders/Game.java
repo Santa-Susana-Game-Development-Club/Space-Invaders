@@ -29,7 +29,7 @@ public class Game extends ApplicationAdapter {
 	
 	public static int SCORE, HIGHSCORE;
 	
-	public static final States defaultState = States.GAMEOVER;
+	public static final States defaultState = States.PLAY;
  	
 	@Override
 	public void create () {

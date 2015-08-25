@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.*;
 import com.tcg.spaceinvaders.*;
+import com.tcg.spaceinvaders.MyConstants.States;
 import com.tcg.spaceinvaders.entities.*;
 import com.tcg.spaceinvaders.entities.Bullet.Type;
 import com.tcg.spaceinvaders.managers.GameStateManager;
@@ -137,6 +138,10 @@ public class PlayState extends GameState {
 		
 		for(Bullet b : bullets) {
 			b.update();
+			if(b.collidingWith(p) && b.getType() == Type.HOSTILE) {
+				Game.res.getSound("explosion").play();
+				gsm.setState(States.GAMEOVER);
+			}
 			if(b.getY() <= 0 || b.getTop() >= MyConstants.WORLD_HEIGHT) {
 				bullets.removeValue(b, true);
 				continue;
@@ -150,6 +155,10 @@ public class PlayState extends GameState {
 		moveTime+= dt;
 		for(Enemy e : enemies) {
 			e.update(moveTime >= moveTimer, enemyUp);
+			if(e.getY() <= MyConstants.WORLD_HEIGHT * .2f + (Shield.totalHeight * .5f)) {
+				gsm.setState(States.GAMEOVER);
+				break;
+			}
 			float chance = (1 - ((float)enemies.size / (float) (5f * 13f))) / 500f;
 			MyConstants.clamp(chance, 0f, 0.0010461538f);
 			if(MathUtils.randomBoolean(chance)) {
@@ -280,7 +289,7 @@ public class PlayState extends GameState {
 			}
 		}
 
-		
+
 		moveTimer = .75f;
 		moveTime = 0;
 		
