@@ -22,6 +22,12 @@ public class Game extends ApplicationAdapter {
 	private float fpstime;
 	
 	public static Content res;
+
+	final static Save defaultSave = new Save(0);
+	
+	private static Save save;
+	
+	public static int SCORE, HIGHSCORE;
  	
 	@Override
 	public void create () {
@@ -49,6 +55,12 @@ public class Game extends ApplicationAdapter {
 		res.loadSound("sound", "shoot.mp3", "shoot");
 		res.loadSound("sound", "invaderkilled.mp3", "endeath");
 		res.loadSound("sound", "ufo.mp3", "ufo");
+		
+		SCORE = 0;
+		
+		Game.load();
+		
+		Game.HIGHSCORE = Game.save.getHighscore();
 		
 		gsm = new GameStateManager(States.PLAY); //TODO Change PLAY to SPLASH when SplashState is created
 		
@@ -89,5 +101,28 @@ public class Game extends ApplicationAdapter {
 	@Override
 	public void dispose() {
 		gsm.dispose();
+		Game.save();
+	}
+	
+	public static void load() {
+		if (Gdx.files.local(MyConstants.saveFile).exists()) {
+			try {
+				save = Save.load();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			save = defaultSave;
+			Game.save();
+		}
+	}
+	
+	public static void save() {
+		save.setHighscore(Game.HIGHSCORE);
+		try {
+			save.save(save);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

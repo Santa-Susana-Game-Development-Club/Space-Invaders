@@ -13,6 +13,8 @@ public class MotherShip extends Entity {
 	
 	private Texture tex;
 	
+	private int pointWorth;
+	
 	public MotherShip() {
 		super();
 		tex = new Texture("entities/enemies/mothership.png");
@@ -22,6 +24,15 @@ public class MotherShip extends Entity {
 		} else {
 			bounds.set(MyConstants.GAME_WIDTH, MyConstants.WORLD_HEIGHT * .9f, tex.getWidth(), tex.getHeight());
 			vel.set(-speed, 0);
+		}
+		if(MathUtils.randomBoolean()) {
+			pointWorth = 50;
+		} else if(MathUtils.randomBoolean()) {
+			pointWorth = 100;
+		} else if(MathUtils.randomBoolean()) {
+			pointWorth = 150;
+		} else {
+			pointWorth = 300;
 		}
 		Game.res.getSound("ufo").play();
 	}
@@ -38,6 +49,10 @@ public class MotherShip extends Entity {
 	@Override
 	public void dispose() {
 		tex.dispose();
+	}
+
+	public int getPointWorth() {
+		return pointWorth;
 	}
 
 }

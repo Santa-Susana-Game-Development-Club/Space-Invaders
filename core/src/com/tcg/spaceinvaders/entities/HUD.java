@@ -28,7 +28,7 @@ public class HUD {
 	
 	private void setValues() {
 		scoreT = "Score";
-		score = MyConstants.getScore(0);
+		score = MyConstants.getScore(Game.SCORE);
 		
 		stH = Game.res.getHeight("main", scoreT, MyConstants.WOLRD_WIDTH - MyConstants.GAME_WIDTH - 10, Align.left, false);
 		stX = MyConstants.GAME_WIDTH + 5;
@@ -40,7 +40,7 @@ public class HUD {
 		
 		highScoreTa = "High";
 		highScoreTb = "Score";
-		highScore = MyConstants.getScore(0);
+		highScore = MyConstants.getScore(Game.HIGHSCORE);
 
 		hstaH = Game.res.getHeight("main", highScoreTa, MyConstants.WOLRD_WIDTH - MyConstants.GAME_WIDTH - 10, Align.left, false);
 		

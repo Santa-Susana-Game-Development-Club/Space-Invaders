@@ -67,6 +67,7 @@ public class PlayState extends GameState {
 		shields.add(new Shield((MyConstants.GAME_WIDTH * .5f) + (Shield.totalWidth * 2) + (Shield.totalWidth * .5f), MyConstants.WORLD_HEIGHT * .2f - (Shield.totalHeight * .5f)));
 		shields.add(new Shield((MyConstants.GAME_WIDTH * .5f) + (Shield.totalWidth * 4) + (Shield.totalWidth * .5f), MyConstants.WORLD_HEIGHT * .2f - (Shield.totalHeight * .5f)));
 	
+		Game.SCORE = 0;
 		
 		reset();
 		
@@ -99,6 +100,7 @@ public class PlayState extends GameState {
 	@Override
 	public void update(float dt) {
 		p.update();
+		
 		motherShipTime += dt;
 		if(motherShipTime > motherShipTimer) {
 			motherShipTime = 0;
@@ -110,6 +112,9 @@ public class PlayState extends GameState {
 			for(Bullet b : bullets) {
 				if(ship.collidingWith(b)) {
 					bullets.removeValue(b, true);
+					Game.SCORE += ship.getPointWorth();
+					Game.res.getSound("explosion").play();
+					ship.dispose();
 					motherShip.removeValue(ship, true);
 					shouldBreak = true;
 					continue;
@@ -122,6 +127,7 @@ public class PlayState extends GameState {
 				motherShipTimer *= 1.25f;
 			}
 		}
+		
 		for(Bullet b : bullets) {
 			b.update();
 			if(b.getY() <= 0 || b.getTop() >= MyConstants.WORLD_HEIGHT) {
@@ -129,6 +135,7 @@ public class PlayState extends GameState {
 				continue;
 			}
 		}
+		
 		for(Shield s : shields) {
 			s.update(bullets);
 		}
@@ -154,6 +161,7 @@ public class PlayState extends GameState {
 				if(e.collidingWith(b) && b.getType() == Type.FRIENDLY) {
 					bullets.removeValue(b, true);
 					Game.res.getSound("endeath").play();
+					Game.SCORE += e.getPointWorth();
 					e.dispose();
 					enemies.removeValue(e, true);
 					moveTimer *= .95f;
@@ -170,6 +178,10 @@ public class PlayState extends GameState {
 		
 		if(enemies.size == 0) {
 			reset();
+		}
+		
+		if(Game.SCORE > Game.HIGHSCORE) {
+			Game.HIGHSCORE = Game.SCORE;
 		}
 	}
 
@@ -235,6 +247,10 @@ public class PlayState extends GameState {
 		for(Enemy e : enemies) {
 			e.dispose();
 		}
+		for(MotherShip ship : motherShip) {
+			ship.dispose();
+		}
+		Game.save();
 	}
 	
 	private void reset() {
