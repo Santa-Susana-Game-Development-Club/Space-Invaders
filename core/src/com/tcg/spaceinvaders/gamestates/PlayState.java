@@ -41,6 +41,8 @@ public class PlayState extends GameState {
 	
 	private HUD hud;
 	
+	private Array<Particle> particles;
+	
 	public PlayState(GameStateManager gsm) {
 		super(gsm);
 	}
@@ -58,6 +60,8 @@ public class PlayState extends GameState {
 		motherShip  = new Array<MotherShip>();
 		
 		shields = new Array<Shield>();
+		
+		particles = new Array<Particle>();
 		
 		shields.clear();
 		shields.add(new Shield((MyConstants.GAME_WIDTH * .5f) - (Shield.totalWidth) - (Shield.totalWidth * .5f), MyConstants.WORLD_HEIGHT * .2f - (Shield.totalHeight * .5f)));
@@ -114,9 +118,12 @@ public class PlayState extends GameState {
 					bullets.removeValue(b, true);
 					Game.SCORE += ship.getPointWorth();
 					Game.res.getSound("explosion").play();
+					particles.add(new Particle(ship));
 					ship.dispose();
 					motherShip.removeValue(ship, true);
 					shouldBreak = true;
+					motherShipTime = 0;
+					motherShipTimer *= 1.25f;
 					continue;
 				}
 			}
@@ -162,6 +169,7 @@ public class PlayState extends GameState {
 					bullets.removeValue(b, true);
 					Game.res.getSound("endeath").play();
 					Game.SCORE += e.getPointWorth();
+					particles.add(new Particle(e));
 					e.dispose();
 					enemies.removeValue(e, true);
 					moveTimer *= .95f;
@@ -207,6 +215,13 @@ public class PlayState extends GameState {
 			ship.draw(sr, sb, dt);
 		}
 		p.draw(sr, sb, dt);
+		for(Particle pa : particles) {
+			pa.render(dt, sb);
+			if(pa.isShouldRemove()) {
+				pa.dispose();
+				particles.removeValue(pa, true);
+			}
+		}
 		sb.end();
 		
 		if(debug) debug(dt, sb, sr);
@@ -249,6 +264,9 @@ public class PlayState extends GameState {
 		}
 		for(MotherShip ship : motherShip) {
 			ship.dispose();
+		}
+		for(Particle pa : particles) {
+			pa.dispose();
 		}
 		Game.save();
 	}
