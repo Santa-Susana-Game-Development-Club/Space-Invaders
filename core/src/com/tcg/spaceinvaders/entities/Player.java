@@ -3,7 +3,9 @@ package com.tcg.spaceinvaders.entities;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.Array;
 import com.tcg.spaceinvaders.MyConstants;
+import com.tcg.spaceinvaders.entities.Bullet.Type;
 import com.tcg.spaceinvaders.managers.MyInput;
 
 public class Player extends Entity {

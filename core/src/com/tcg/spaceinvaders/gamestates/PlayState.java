@@ -4,15 +4,18 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.*;
 import com.tcg.spaceinvaders.*;
 import com.tcg.spaceinvaders.entities.*;
+import com.tcg.spaceinvaders.entities.Bullet.Type;
 import com.tcg.spaceinvaders.managers.GameStateManager;
+import com.tcg.spaceinvaders.managers.MyInput;
 
 public class PlayState extends GameState {
 
-	final boolean debug = true;
+	final boolean debug = false;
 	
 	private MyCamera cam;
 
@@ -23,6 +26,8 @@ public class PlayState extends GameState {
 	private Array<Shield> shields;
 	
 	private Array<Enemy> enemies;
+	
+	private Array<Bullet> bullets;
 	
 	private float moveTime, moveTimer;
 	
@@ -42,54 +47,83 @@ public class PlayState extends GameState {
 		p = new Player();
 		
 		shields = new Array<Shield>();
-		shields.add(new Shield((MyConstants.GAME_WIDTH * .5f) - (Shield.totalWidth) - (Shield.totalWidth * .5f), MyConstants.WORLD_HEIGHT * .15f - (Shield.totalHeight * .5f)));
-		shields.add(new Shield((MyConstants.GAME_WIDTH * .5f) - (Shield.totalWidth * 3) - (Shield.totalWidth * .5f), MyConstants.WORLD_HEIGHT * .15f - (Shield.totalHeight * .5f)));
-		shields.add(new Shield((MyConstants.GAME_WIDTH * .5f) - (Shield.totalWidth * 5) - (Shield.totalWidth * .5f), MyConstants.WORLD_HEIGHT * .15f - (Shield.totalHeight * .5f)));
-		shields.add(new Shield((MyConstants.GAME_WIDTH * .5f) + (Shield.totalWidth * .5f), MyConstants.WORLD_HEIGHT * .15f - (Shield.totalHeight * .5f)));
-		shields.add(new Shield((MyConstants.GAME_WIDTH * .5f) + (Shield.totalWidth * 2) + (Shield.totalWidth * .5f), MyConstants.WORLD_HEIGHT * .15f - (Shield.totalHeight * .5f)));
-		shields.add(new Shield((MyConstants.GAME_WIDTH * .5f) + (Shield.totalWidth * 4) + (Shield.totalWidth * .5f), MyConstants.WORLD_HEIGHT * .15f - (Shield.totalHeight * .5f)));
-	
 		enemies = new Array<Enemy>();
-		for(int row = 0; row < 5; row++) {
-			for(int col = 0; col < 11; col++) {
-				enemies.add(new Enemy(row, col));
-			}
-		}
+		shields.clear();
+		shields.add(new Shield((MyConstants.GAME_WIDTH * .5f) - (Shield.totalWidth) - (Shield.totalWidth * .5f), MyConstants.WORLD_HEIGHT * .2f - (Shield.totalHeight * .5f)));
+		shields.add(new Shield((MyConstants.GAME_WIDTH * .5f) - (Shield.totalWidth * 3) - (Shield.totalWidth * .5f), MyConstants.WORLD_HEIGHT * .2f - (Shield.totalHeight * .5f)));
+		shields.add(new Shield((MyConstants.GAME_WIDTH * .5f) - (Shield.totalWidth * 5) - (Shield.totalWidth * .5f), MyConstants.WORLD_HEIGHT * .2f - (Shield.totalHeight * .5f)));
+		shields.add(new Shield((MyConstants.GAME_WIDTH * .5f) + (Shield.totalWidth * .5f), MyConstants.WORLD_HEIGHT * .2f - (Shield.totalHeight * .5f)));
+		shields.add(new Shield((MyConstants.GAME_WIDTH * .5f) + (Shield.totalWidth * 2) + (Shield.totalWidth * .5f), MyConstants.WORLD_HEIGHT * .2f - (Shield.totalHeight * .5f)));
+		shields.add(new Shield((MyConstants.GAME_WIDTH * .5f) + (Shield.totalWidth * 4) + (Shield.totalWidth * .5f), MyConstants.WORLD_HEIGHT * .2f - (Shield.totalHeight * .5f)));
+	
 		
-		moveTimer = .5f;
-		moveTime = 0;
+		reset();
 		
-		enemyUp = false;
+		bullets = new Array<Bullet>();
 		
 	}
 
 	@Override
 	public void handleInput() {
 		p.handleInput();
+		if(MyInput.keyDown(MyInput.SHOOT)) {
+			boolean shoot = true;
+			for(Bullet b : bullets) {
+				if(b.getType() == Type.FRIENDLY) {
+					shoot = false;
+					break;
+				}
+			}
+			if(shoot)bullets.add(new Bullet(Type.FRIENDLY, p));
+		}
 	}
 
 	@Override
 	public void update(float dt) {
 		p.update();
+		for(Bullet b : bullets) {
+			b.update();
+			if(b.getY() <= 0 || b.getTop() >= MyConstants.WORLD_HEIGHT) {
+				bullets.removeValue(b, true);
+			}
+		}
 		for(Shield s : shields) {
-			s.update();
+			s.update(bullets);
 		}
 		
 		moveTime+= dt;
 		for(Enemy e : enemies) {
 			e.update(moveTime >= moveTimer, enemyUp);
+			float chance = (1 - ((float)enemies.size / (float) (5f * 13f))) / 500f;
+			MyConstants.clamp(chance, 0f, 0.0010461538f);
+			if(MathUtils.randomBoolean(chance)) {
+				bullets.add(new Bullet(Type.HOSTILE, e));
+			}
 		}
 		if(moveTime >= moveTimer) {
 			enemyUp = !enemyUp;
 			moveTime = 0;
 		}
 		for(Enemy e : enemies) {
+			for(Bullet b : bullets) {
+				if(e.collidingWith(b) && b.getType() == Type.FRIENDLY) {
+					bullets.removeValue(b, true);
+					e.dispose();
+					enemies.removeValue(e, true);
+					moveTimer *= .95f;
+					break;
+				}
+			}
 			if(e.getRight() >= MyConstants.GAME_WIDTH || e.getX() <= 0) {
 				for(Enemy e1 : enemies) {
 					e1.bounceVelocity();
 				}
 				break;
 			}
+		}
+		
+		if(enemies.size == 0) {
+			reset();
 		}
 	}
 
@@ -100,6 +134,9 @@ public class PlayState extends GameState {
 		sr.begin(ShapeType.Filled);
 		for(Shield s : shields) {
 			s.draw(sr);
+		}
+		for(Bullet b : bullets) {
+			b.draw(sr, sb, dt);
 		}
 		sr.end();
 		
@@ -144,6 +181,21 @@ public class PlayState extends GameState {
 		for(Enemy e : enemies) {
 			e.dispose();
 		}
+	}
+	
+	private void reset() {
+		enemies.clear();
+		for(int row = 0; row < 5; row++) {
+			for(int col = 0; col < 13; col++) {
+				enemies.add(new Enemy(row, col));
+			}
+		}
+
+		
+		moveTimer = .5f;
+		moveTime = 0;
+		
+		enemyUp = false;
 	}
 
 }

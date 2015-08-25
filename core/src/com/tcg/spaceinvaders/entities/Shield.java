@@ -33,9 +33,15 @@ public class Shield {
 		}
 	}
 	
-	public void update() {
+	public void update(Array<Bullet> bullets) {
 		for(Rectangle r : bounds) {
-			
+			for(Bullet b : bullets) {
+				if(r.overlaps(b.getBounds())) {
+					bounds.removeValue(r, true);
+					bullets.removeValue(b, true);
+					continue;
+				}
+			}
 		}
 	}
 	

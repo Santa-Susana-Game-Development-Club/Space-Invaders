@@ -27,7 +27,7 @@ public class Enemy extends Entity {
 			texDown = new Texture(path + "top0.png");
 			texUp = new Texture(path + "top1.png");
 		}
-		bounds.set((MyConstants.GAME_WIDTH * .1355f) + (col * (width * 1.5f)) + ((width - texDown.getWidth()) * .5f), (MyConstants.WORLD_HEIGHT * .5f) + (row * (height * 2.5f)), texDown.getWidth(), texDown.getHeight());
+		bounds.set((MyConstants.GAME_WIDTH * .075f) + (col * (width * 1.5f)) + ((width - texDown.getWidth()) * .5f), (MyConstants.WORLD_HEIGHT * .6f) + (row * (height * 2.5f)), texDown.getWidth(), texDown.getHeight());
 		vel.set(2.5f, 0);
 	}
 
