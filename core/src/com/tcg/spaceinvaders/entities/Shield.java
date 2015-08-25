@@ -11,9 +11,13 @@ public class Shield {
 	public static final int totalWidth = 22;
 	public static final int totalHeight = 16;
 	
+	private float startX, startY;
+	
 	private Array<Rectangle> bounds;
 	
 	public Shield(float x, float y) {
+		this.startX = x;
+		this.startY = y;
 		bounds = new Array<Rectangle>();
 		for(int row = 0; row < Shield.totalHeight; row++) { 
 			for(int col = 0; col < Shield.totalWidth; col++) {
@@ -44,7 +48,7 @@ public class Shield {
 	}
 	
 	public void debug(ShapeRenderer sr) {
-		
+		sr.rect(startX, startY, totalWidth, totalHeight);
 	}
 
 }

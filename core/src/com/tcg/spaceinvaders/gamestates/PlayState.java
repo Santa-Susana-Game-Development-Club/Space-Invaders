@@ -96,7 +96,6 @@ public class PlayState extends GameState {
 	@Override
 	public void draw(float dt, SpriteBatch sb, ShapeRenderer sr) {
 		
-		if(debug) debug(dt, sb, sr);
 		
 		sr.begin(ShapeType.Filled);
 		for(Shield s : shields) {
@@ -111,6 +110,8 @@ public class PlayState extends GameState {
 		}
 		p.draw(sr, sb, dt);
 		sb.end();
+		
+		if(debug) debug(dt, sb, sr);
 
 	}
 	
@@ -118,11 +119,16 @@ public class PlayState extends GameState {
 		sr.begin(ShapeType.Filled);
 		sr.setProjectionMatrix(cam.combined);
 		sr.setColor(Color.WHITE);
-		sr.rect(0, 0, MyConstants.WOLRD_WIDTH, MyConstants.WORLD_HEIGHT);
-		sr.setColor(Color.BLACK);
-		sr.rect(0, 0, MyConstants.GAME_WIDTH, MyConstants.WORLD_HEIGHT);
+		sr.rect(MyConstants.GAME_WIDTH, 0, MyConstants.WOLRD_WIDTH - MyConstants.GAME_WIDTH, MyConstants.WORLD_HEIGHT);
+		sr.end();
+		
+		sr.begin(ShapeType.Line);
 		for(Shield s : shields) {
 			s.debug(sr);
+		}
+		p.debug(sr);
+		for(Enemy e : enemies) {
+			e.debug(sr);
 		}
 		sr.end();
 	}

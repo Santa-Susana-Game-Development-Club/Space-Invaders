@@ -19,6 +19,9 @@ public abstract class Entity {
 	
 	public abstract void dispose();
 	
+	public void debug(ShapeRenderer sr) {
+		sr.rect(getX(), getY(), getWidth(), getHeight());
+	}
 	
 	public float getX() {
 		return bounds.x;
