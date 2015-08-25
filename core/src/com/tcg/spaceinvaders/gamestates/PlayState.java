@@ -39,6 +39,8 @@ public class PlayState extends GameState {
 	
 	private int sound;
 	
+	private HUD hud;
+	
 	public PlayState(GameStateManager gsm) {
 		super(gsm);
 	}
@@ -72,6 +74,8 @@ public class PlayState extends GameState {
 		
 		bullets = new Array<Bullet>();
 		
+		hud = new HUD();
+		
 	}
 
 	@Override
@@ -102,6 +106,16 @@ public class PlayState extends GameState {
 		}
 		for(MotherShip ship : motherShip) {
 			ship.update();
+			boolean shouldBreak = false;
+			for(Bullet b : bullets) {
+				if(ship.collidingWith(b)) {
+					bullets.removeValue(b, true);
+					motherShip.removeValue(ship, true);
+					shouldBreak = true;
+					continue;
+				}
+			}
+			if(shouldBreak) break;
 			if(ship.getX() < 0 || ship.getX() > MyConstants.GAME_WIDTH) {
 				motherShip.removeValue(ship, true);
 				motherShipTime = 0;
@@ -184,6 +198,8 @@ public class PlayState extends GameState {
 		sb.end();
 		
 		if(debug) debug(dt, sb, sr);
+		
+		hud.render(sb, cam);
 
 	}
 	
@@ -192,6 +208,9 @@ public class PlayState extends GameState {
 		sr.setProjectionMatrix(cam.combined);
 		sr.setColor(Color.WHITE);
 		sr.rect(MyConstants.GAME_WIDTH, 0, MyConstants.WOLRD_WIDTH - MyConstants.GAME_WIDTH, MyConstants.WORLD_HEIGHT);
+		sr.setColor(Color.RED);
+		sr.rect(MyConstants.WOLRD_WIDTH, 0, -5, MyConstants.WORLD_HEIGHT);
+		sr.setColor(Color.WHITE);
 		sr.end();
 		
 		sr.begin(ShapeType.Line);

@@ -145,18 +145,12 @@ public class MyConstants {
 
 	public static String getScore(int score) {
 		if(score < 10) {
-			return "0000000" + score;
-		} else if(score < 100) {
-			return "000000" + score;
-		} else if(score < 1000) {
-			return "00000" + score;
-		} else if(score < 10000) {
 			return "0000" + score;
-		} else if(score < 100000) {
+		} else if(score < 100) {
 			return "000" + score;
-		} else if(score < 1000000) {
+		} else if(score < 1000) {
 			return "00" + score;
-		} else if(score < 10000000) {
+		} else if(score < 10000) {
 			return "0" + score;
 		} else {
 			return "" + score;
