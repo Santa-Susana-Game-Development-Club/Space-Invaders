@@ -3,6 +3,7 @@ package com.tcg.spaceinvaders;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
 import com.tcg.spaceinvaders.MyConstants.States;
@@ -19,6 +20,8 @@ public class Game extends ApplicationAdapter {
 	private int fps, frames;
 	
 	private float fpstime;
+	
+	public static Content res;
  	
 	@Override
 	public void create () {
@@ -33,6 +36,19 @@ public class Game extends ApplicationAdapter {
 		fpstime = 0;
 		fps = 0;
 		frames = 0;
+		
+		res = new Content();
+		
+		res.loadBitmapFont("font", "prstartk.ttf", "main", 12, Color.WHITE);
+		
+		res.loadSound("sound", "explosion.mp3", "death");
+		res.loadSound("sound", "fastinvader1.mp3", "invader0");
+		res.loadSound("sound", "fastinvader2.mp3", "invader1");
+		res.loadSound("sound", "fastinvader3.mp3", "invader2");
+		res.loadSound("sound", "fastinvader4.mp3", "invader3");
+		res.loadSound("sound", "shoot.mp3", "shoot");
+		res.loadSound("sound", "invaderkilled.mp3", "endeath");
+		res.loadSound("sound", "ufo.mp3", "ufo");
 		
 		gsm = new GameStateManager(States.PLAY); //TODO Change PLAY to SPLASH when SplashState is created
 		

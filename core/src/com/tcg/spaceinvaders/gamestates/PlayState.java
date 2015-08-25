@@ -37,6 +37,8 @@ public class PlayState extends GameState {
 	
 	private float motherShipTime, motherShipTimer;
 	
+	private int sound;
+	
 	public PlayState(GameStateManager gsm) {
 		super(gsm);
 	}
@@ -50,8 +52,11 @@ public class PlayState extends GameState {
 		
 		p = new Player();
 		
-		shields = new Array<Shield>();
 		enemies = new Array<Enemy>();
+		motherShip  = new Array<MotherShip>();
+		
+		shields = new Array<Shield>();
+		
 		shields.clear();
 		shields.add(new Shield((MyConstants.GAME_WIDTH * .5f) - (Shield.totalWidth) - (Shield.totalWidth * .5f), MyConstants.WORLD_HEIGHT * .2f - (Shield.totalHeight * .5f)));
 		shields.add(new Shield((MyConstants.GAME_WIDTH * .5f) - (Shield.totalWidth * 3) - (Shield.totalWidth * .5f), MyConstants.WORLD_HEIGHT * .2f - (Shield.totalHeight * .5f)));
@@ -62,6 +67,8 @@ public class PlayState extends GameState {
 	
 		
 		reset();
+		
+		sound = 0;
 		
 		bullets = new Array<Bullet>();
 		
@@ -78,7 +85,10 @@ public class PlayState extends GameState {
 					break;
 				}
 			}
-			if(shoot)bullets.add(new Bullet(Type.FRIENDLY, p));
+			if(shoot) {
+				Game.res.getSound("shoot").play();
+				bullets.add(new Bullet(Type.FRIENDLY, p));
+			}
 		}
 	}
 
@@ -94,6 +104,8 @@ public class PlayState extends GameState {
 			ship.update();
 			if(ship.getX() < 0 || ship.getX() > MyConstants.GAME_WIDTH) {
 				motherShip.removeValue(ship, true);
+				motherShipTime = 0;
+				motherShipTimer *= 1.25f;
 			}
 		}
 		for(Bullet b : bullets) {
@@ -119,11 +131,15 @@ public class PlayState extends GameState {
 		if(moveTime >= moveTimer) {
 			enemyUp = !enemyUp;
 			moveTime = 0;
+			sound++;
+			sound = (int)MyConstants.wrap(sound, 0, 3);
+			Game.res.getSound("invader" + sound).play();
 		}
 		for(Enemy e : enemies) {
 			for(Bullet b : bullets) {
 				if(e.collidingWith(b) && b.getType() == Type.FRIENDLY) {
 					bullets.removeValue(b, true);
+					Game.res.getSound("endeath").play();
 					e.dispose();
 					enemies.removeValue(e, true);
 					moveTimer *= .95f;
@@ -160,6 +176,9 @@ public class PlayState extends GameState {
 		sb.setProjectionMatrix(cam.combined);
 		for(Enemy e : enemies) {
 			e.draw(sr, sb, dt);
+		}
+		for(MotherShip ship : motherShip) {
+			ship.draw(sr, sb, dt);
 		}
 		p.draw(sr, sb, dt);
 		sb.end();
@@ -209,7 +228,7 @@ public class PlayState extends GameState {
 		}
 
 		
-		moveTimer = .5f;
+		moveTimer = .75f;
 		moveTime = 0;
 		
 		enemyUp = false;
