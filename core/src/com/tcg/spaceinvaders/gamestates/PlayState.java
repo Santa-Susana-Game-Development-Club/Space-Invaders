@@ -1,6 +1,7 @@
 package com.tcg.spaceinvaders.gamestates;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -46,6 +47,12 @@ public class PlayState extends GameState {
 	
 	private Array<Star> stars;
 	
+	private Array<Texture> troub;
+	
+	private float troubTime, troubTimer;
+	
+	private int troubFrame, pTroubFrame;
+	
 	public PlayState(GameStateManager gsm) {
 		super(gsm);
 	}
@@ -81,6 +88,22 @@ public class PlayState extends GameState {
 		sound = 0;
 		
 		bullets = new Array<Bullet>();
+		
+		troubTime = 0;
+		troubTimer = .5f;
+		
+		
+		troub = new Array<Texture>();
+		
+		String path = "devguy/", png = ".png";
+		
+		for(int i = 0; i < 10; i++) {
+			troub.add(new Texture(path + i + png));
+		}
+		
+		troubFrame = MathUtils.random(troub.size - 1);
+		
+		pTroubFrame = troubFrame;
 		
 		hud = new HUD();
 		
@@ -211,6 +234,17 @@ public class PlayState extends GameState {
 		if(Game.SCORE > Game.HIGHSCORE) {
 			Game.HIGHSCORE = Game.SCORE;
 		}
+		
+		troubTime += dt;
+		if(troubTime >= troubTimer) {
+			troubFrame = MathUtils.random(troub.size - 1);
+			while(troubFrame == pTroubFrame) {
+				troubFrame = MathUtils.random(troub.size - 1);
+			}
+			troubTime = 0;
+		}
+		
+		pTroubFrame = troubFrame;
 	}
 
 	@Override
@@ -245,6 +279,7 @@ public class PlayState extends GameState {
 				particles.removeValue(pa, true);
 			}
 		}
+		sb.draw(troub.get(troubFrame), MyConstants.GAME_WIDTH, 100);
 		sb.end();
 		
 		if(debug) debug(dt, sb, sr);
