@@ -23,7 +23,7 @@ public class GameStateManager {
 			
 		}
 		if(state == States.TITLE) {
-			
+			gameState = new TitleState(this);
 		}
 		if(state == States.PLAY) {
 			gameState = new PlayState(this);

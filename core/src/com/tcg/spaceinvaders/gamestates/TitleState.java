@@ -1,5 +1,6 @@
 package com.tcg.spaceinvaders.gamestates;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -13,19 +14,19 @@ import com.tcg.spaceinvaders.entities.Star;
 import com.tcg.spaceinvaders.managers.GameStateManager;
 import com.tcg.spaceinvaders.managers.MyInput;
 
-public class GameOverState extends GameState {
+public class TitleState extends GameState {
 	
 	private MyCamera cam;
 
 	private Viewport view;
 	
-	private String gameover, score, exit;
+	private String title, enter;
 	
-	private float gX, gY, gH, sX, sY, sH, eX, eY, eH;
+	private float gX, gY, gH, eX, eY, eH;
 	
 	private Array<Star> stars;
 	
-	public GameOverState(GameStateManager gsm) {
+	public TitleState(GameStateManager gsm) {
 		super(gsm);
 	}
 
@@ -48,37 +49,31 @@ public class GameOverState extends GameState {
 	
 	private void setValues() {
 		
-		gameover = "Game Over";
+		title = Game.TITLE;
 		
-		gH = Game.res.getHeight("main", gameover, MyConstants.WOLRD_WIDTH - 20, Align.center, true);
+		gH = Game.res.getHeight("main", title, MyConstants.WOLRD_WIDTH - 20, Align.center, true);
 		
 		gX = 10f;
 		
-		gY = (MyConstants.WORLD_HEIGHT * .5f) + gH + gH + gH + 5;
+		gY = (MyConstants.WORLD_HEIGHT * .55f) + (gH * .5f);
 		
-		score = MyConstants.getScore(Game.SCORE);
+		enter = "Press Enter to Play";
 		
-		sH = Game.res.getHeight("main", score, MyConstants.WOLRD_WIDTH - 20, Align.center, true);
-		
-		sX = 10f;
-
-		sY = gY - gH - sH - 5;
-		
-		exit = "Press Enter to Exit";
-		
-		eH = Game.res.getHeight("main", exit, MyConstants.WOLRD_WIDTH - 20, Align.center, true);
+		eH = Game.res.getHeight("main", enter, MyConstants.WOLRD_WIDTH - 20, Align.center, true);
 		
 		eX = 10f;
 		
-		eY = sY - sH - eH - 5;
+		eY = gY - (eH * 3f) - 5;
 	}
 
 	@Override
 	public void handleInput() {
 		if(MyInput.keyPressed(MyInput.START)) {
-			gsm.setState(States.TITLE);
+			gsm.setState(States.PLAY);
 		}
-
+		if(MyInput.keyPressed(MyInput.BACK)) {
+			Gdx.app.exit();
+		}
 	}
 
 	@Override
@@ -98,9 +93,8 @@ public class GameOverState extends GameState {
 		
 		sb.begin();
 		sb.setProjectionMatrix(cam.combined);
-		Game.res.getFont("main").draw(sb, gameover, gX, gY, MyConstants.WOLRD_WIDTH - 20, Align.center, true);
-		Game.res.getFont("main").draw(sb, score, sX, sY, MyConstants.WOLRD_WIDTH - 20, Align.center, true);
-		Game.res.getFont("main").draw(sb, exit, eX, eY, MyConstants.WOLRD_WIDTH - 20, Align.center, true);
+		Game.res.getFont("main").draw(sb, title, gX, gY, MyConstants.WOLRD_WIDTH - 20, Align.center, true);
+		Game.res.getFont("main").draw(sb, enter, eX, eY, MyConstants.WOLRD_WIDTH - 20, Align.center, true);
 		sb.end();
 
 	}

@@ -44,6 +44,8 @@ public class PlayState extends GameState {
 	
 	private Array<Particle> particles;
 	
+	private Array<Star> stars;
+	
 	public PlayState(GameStateManager gsm) {
 		super(gsm);
 	}
@@ -82,6 +84,12 @@ public class PlayState extends GameState {
 		
 		hud = new HUD();
 		
+		stars = new Array<Star>();
+		
+		for(int i = 0; i < 75; i++) {
+			stars.add(new Star(MyConstants.GAME_WIDTH));
+		}
+		
 	}
 
 	@Override
@@ -99,6 +107,9 @@ public class PlayState extends GameState {
 				Game.res.getSound("shoot").play();
 				bullets.add(new Bullet(Type.FRIENDLY, p));
 			}
+		}
+		if(MyInput.keyPressed(MyInput.BACK)) {
+			gsm.setState(States.TITLE);
 		}
 	}
 
@@ -207,6 +218,9 @@ public class PlayState extends GameState {
 		
 		
 		sr.begin(ShapeType.Filled);
+		for(Star s : stars) {
+			s.draw(sr);
+		}
 		for(Shield s : shields) {
 			s.draw(sr);
 		}
