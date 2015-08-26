@@ -62,7 +62,7 @@ public class Game extends ApplicationAdapter {
 		
 		Game.HIGHSCORE = Game.save.getHighscore();
 		
-		gsm = new GameStateManager(States.TITLE);
+		gsm = new GameStateManager(States.SPLASH);
 		
 		Gdx.input.setInputProcessor(new MyInputProcessor());
 		Controllers.addListener(new MyControllerProcessor());

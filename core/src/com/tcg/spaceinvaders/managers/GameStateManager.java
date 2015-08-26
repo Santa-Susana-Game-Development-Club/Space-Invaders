@@ -20,7 +20,7 @@ public class GameStateManager {
 	public void setState(States state) {
 		if(gameState != null) gameState.dispose();
 		if(state == States.SPLASH) {
-			
+			gameState = new SplashState(this);
 		}
 		if(state == States.TITLE) {
 			gameState = new TitleState(this);
